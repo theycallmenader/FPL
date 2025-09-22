@@ -1,0 +1,227 @@
+{% extends "layout.html" %}
+{% block title %}FPL Dashboard{% endblock %}
+{% block content %}
+  <section class="dashboard">
+    <div class="summary-panel" id="summary-panel">
+      <article class="summary-card">
+        <h2>Top 5 by Points</h2>
+        <ul id="top-points" class="summary-list"></ul>
+      </article>
+      <article class="summary-card">
+        <h2>Top 5 by Form</h2>
+        <ul id="top-form" class="summary-list"></ul>
+      </article>
+      <article class="summary-card">
+        <h2>Top 5 by Value</h2>
+        <ul id="top-value" class="summary-list"></ul>
+      </article>
+      <article class="summary-card">
+        <h2>Team Points Leaders</h2>
+        <ul id="top-teams" class="summary-list"></ul>
+      </article>
+      <article class="summary-card">
+        <h2>Position Breakdown</h2>
+        <ul id="position-breakdown" class="summary-list"></ul>
+      </article>
+      <article class="summary-card">
+        <h2>Top 5 Expected Points</h2>
+        <ul id="top-expected-points" class="summary-list"></ul>
+      </article>
+      <article class="summary-card">
+        <h2>Top 5 Expected Goals</h2>
+        <ul id="top-expected-goals" class="summary-list"></ul>
+      </article>
+      <article class="summary-card">
+        <h2>Top 5 Expected Assists</h2>
+        <ul id="top-expected-assists" class="summary-list"></ul>
+      </article>
+      <article class="summary-card">
+        <h2>Team Expected GI</h2>
+        <ul id="team-xgi" class="summary-list"></ul>
+      </article>
+    </div>
+
+    <section class="kpi-panel">
+      <article class="kpi-card">
+        <span class="kpi-label">Avg Points / Game</span>
+        <span class="kpi-value" id="kpi-avg-ppg">0.0</span>
+      </article>
+      <article class="kpi-card">
+        <span class="kpi-label">Avg Exp Points (Next)</span>
+        <span class="kpi-value" id="kpi-avg-expected-points">0.0</span>
+      </article>
+      <article class="kpi-card">
+        <span class="kpi-label">Total Expected GI</span>
+        <span class="kpi-value" id="kpi-total-xgi">0.0</span>
+      </article>
+      <article class="kpi-card kpi-highlight">
+        <span class="kpi-label">Top xGI Player</span>
+        <span class="kpi-value" id="kpi-top-xgi-player">-</span>
+        <span class="kpi-subvalue" id="kpi-top-xgi-value"></span>
+      </article>
+    </section>
+
+    <section class="charts">
+      <article class="chart-card">
+        <div class="chart-header">
+          <h2>Expected Goals Leaders</h2>
+          <span class="chart-subtitle">Top 10 players by xG</span>
+        </div>
+        <div class="chart-canvas">
+          <canvas id="chart-expected-goals"></canvas>
+        </div>
+      </article>
+      <article class="chart-card">
+        <div class="chart-header">
+          <h2>Expected Assists Leaders</h2>
+          <span class="chart-subtitle">Top 10 players by xA</span>
+        </div>
+        <div class="chart-canvas">
+          <canvas id="chart-expected-assists"></canvas>
+        </div>
+      </article>
+      <article class="chart-card">
+        <div class="chart-header">
+          <h2>Team xGI Totals</h2>
+          <span class="chart-subtitle">Top clubs by expected goal involvement</span>
+        </div>
+        <div class="chart-canvas">
+          <canvas id="chart-team-xgi"></canvas>
+        </div>
+      </article>
+    </section>
+
+    <section class="charts charts-secondary">
+      <article class="chart-card">
+        <div class="chart-header">
+          <h2>xGI per 90 vs Minutes</h2>
+          <span class="chart-subtitle">Filter targets by output and game time</span>
+        </div>
+        <div class="chart-canvas">
+          <canvas id="chart-xgi-scatter"></canvas>
+        </div>
+      </article>
+      <article class="chart-card">
+        <div class="chart-header">
+          <h2>Team Strength Balance</h2>
+          <span class="chart-subtitle">Attack vs defence (bubble size = easier fixtures)</span>
+        </div>
+        <div class="chart-canvas">
+          <canvas id="chart-team-balance"></canvas>
+        </div>
+      </article>
+    </section>
+
+    <section class="player-insights">
+      <div class="insights-header">
+        <label for="player-insights-select" class="insights-label">Focus Player</label>
+        <select id="player-insights-select">
+          <option value="">Select a player...</option>
+        </select>
+        <div class="insights-meta">
+          <span id="insights-player-name">-</span>
+          <span id="insights-player-team"></span>
+          <span id="insights-player-position"></span>
+        </div>
+      </div>
+      <div class="insights-grid">
+        <article class="chart-card wide">
+          <div class="chart-header">
+            <h2>Points vs Expected</h2>
+            <span class="chart-subtitle">Track actual vs expected haul by gameweek</span>
+          </div>
+          <div class="chart-canvas">
+            <canvas id="chart-player-points"></canvas>
+          </div>
+        </article>
+        <article class="chart-card">
+          <div class="chart-header">
+            <h2>Price & Value Trend</h2>
+            <span class="chart-subtitle">Price (left) vs points (right)</span>
+          </div>
+          <div class="chart-canvas">
+            <canvas id="chart-player-price"></canvas>
+          </div>
+        </article>
+        <article class="card fixtures-card">
+          <div class="card-header">
+            <h3>Next Fixtures</h3>
+            <span class="card-subtitle">Difficulty from 1 (easiest) to 5 (hardest)</span>
+          </div>
+          <ul id="insights-upcoming" class="fixtures-list"></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="fixture-heatmap">
+      <article class="chart-card heatmap-card">
+        <div class="chart-header">
+          <h2>Upcoming Fixture Difficulty</h2>
+          <span class="chart-subtitle">Next five gameweeks per team</span>
+        </div>
+        <div class="heatmap-scroll">
+          <table id="fixture-heatmap-table"></table>
+        </div>
+      </article>
+    </section>
+
+    <div class="controls" id="filters">
+      <label>
+        Position
+        <select id="position-filter">
+          <option value="all">All</option>
+        </select>
+      </label>
+      <label>
+        Team
+        <select id="team-filter">
+          <option value="all">All</option>
+        </select>
+      </label>
+      <label class="search-field">
+        Search
+        <input type="search" id="search-filter" placeholder="Player name or team">
+      </label>
+      <div class="refresh">
+        <button id="refresh-button" type="button">Refresh Data</button>
+      </div>
+    </div>
+
+    <section class="table-wrapper">
+      <div class="table-header">
+        <h2>Player Performance</h2>
+        <span id="player-count"></span>
+      </div>
+      <div class="table-scroll">
+        <table id="players-table">
+          <thead>
+            <tr>
+              <th data-sort="web_name">Player</th>
+              <th data-sort="team">Team</th>
+              <th data-sort="position">Position</th>
+              <th data-sort="total_points" class="numeric">Total Points</th>
+              <th data-sort="expected_points_next" class="numeric">Exp Points (Next)</th>
+              <th data-sort="form" class="numeric">Form</th>
+              <th data-sort="value_form" class="numeric">Value</th>
+              <th data-sort="selected_by_percent" class="numeric">Selected %</th>
+              <th data-sort="now_cost" class="numeric">Price (GBP m)</th>
+              <th data-sort="minutes" class="numeric">Minutes</th>
+              <th data-sort="goals_scored" class="numeric">Goals</th>
+              <th data-sort="assists" class="numeric">Assists</th>
+              <th data-sort="clean_sheets" class="numeric">Clean Sheets</th>
+              <th data-sort="expected_goals" class="numeric">xG</th>
+              <th data-sort="expected_assists" class="numeric">xA</th>
+              <th data-sort="expected_goal_involvements" class="numeric">xGI</th>
+              <th data-sort="expected_goal_involvements_per_90" class="numeric">xGI / 90</th>
+              <th data-sort="points_per_game" class="numeric">Pts / Game</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="status">
+        <span id="status-message"></span>
+      </div>
+    </section>
+  </section>
+{% endblock %}
